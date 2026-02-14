@@ -2,141 +2,191 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <!-- ✅ Meta tag CLAVE para control de zoom en móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Inmaculada24 - Transmisión en Vivo</title>
+    <title>Inmaculada24 • En Vivo</title>
     <style>
-        /* Estilos generales */
+        /* Reset total */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #1a1e2b 0%, #2d3349 100%);
+            background: #0b0e14;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 0; /* Sin padding lateral para máximo aprovechamiento */
         }
 
-        .contenedor-streaming {
+        /* Contenedor principal - ocupa todo el ancho disponible */
+        .player-wrapper {
             width: 100%;
-            max-width: 900px; /* Ancho máximo en PC */
-            background: #0f1119;
-            border-radius: 24px;
-            padding: 24px 24px 30px 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 100%;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
         }
 
-        h1 {
-            color: white;
-            font-size: clamp(1.3rem, 5vw, 1.8rem); /* Tamaño de letra fluido */
-            margin-bottom: 20px;
+        /* Título solo visible en la versión móvil (opcional, lo puedes quitar si prefieres) */
+        .brand-mobile {
+            background: #0f1219;
+            padding: 16px 16px 8px 16px;
             text-align: center;
+            border-bottom: 1px solid #2a2f3c;
+        }
+
+        .brand-mobile h1 {
+            color: white;
+            font-size: 1.4rem;
             font-weight: 500;
-            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        h1 span {
-            background: #ef4444;
+        .brand-mobile .live-badge {
+            background: #dc2626;
+            color: white;
             font-size: 0.7rem;
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 30px;
             text-transform: uppercase;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
-        /* Contenedor del iframe - CLAVE PARA LA RESPONSIVIDAD */
-        .contenedor-video {
+        /* ===== CONTENEDOR DEL VIDEO - SOLUCIÓN ANTI-ZOOM ===== */
+        .video-container {
             position: relative;
             width: 100%;
             background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            /* Proporción exacta 16:9 (altura = ancho * 9/16) */
+            aspect-ratio: 16 / 9;
+            overflow: hidden; /* Evita desbordamientos */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Truco para mantener proporción 16:9 (852/480 ≈ 16/9) */
-        .contenedor-video::before {
-            content: "";
-            display: block;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio (9/16 = 0.5625) */
-        }
-
-        /* El iframe se adapta perfectamente */
-        .contenedor-video iframe {
+        /* El iframe - AHORA SIN ZOOM FORZADO */
+        .video-container iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
+            border: 0;
+            object-fit: contain; /* 🔥 CLAVE: "contain" evita que se corte/zoom */
+            background: #000; /* Fondo negro para bordes si hay letterbox */
         }
 
-        .info-footer {
-            margin-top: 20px;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            text-align: center;
+        /* Barra de estado inferior */
+        .status-bar {
+            background: #0f1219;
+            padding: 14px 16px;
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px 25px;
+            align-items: center;
+            justify-content: space-between;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            border-top: 1px solid #2a2f3c;
+            gap: 10px;
         }
 
-        .info-footer div {
+        .live-indicator {
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .punto-vivo {
-            display: inline-block;
+        .dot {
             width: 10px;
             height: 10px;
             background: #ef4444;
             border-radius: 50%;
-            margin-right: 8px;
-            animation: parpadeo 1.5s infinite;
+            animation: pulse 1.5s infinite;
         }
 
-        @keyframes parpadeo {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Media query específico para celulares muy pequeños */
-        @media (max-width: 480px) {
+        .note {
+            color: #6b7280;
+            font-size: 0.75rem;
+            text-align: center;
+            background: #0a0c12;
+            padding: 8px;
+            border-top: 1px solid #1e2128;
+        }
+
+        /* Estilos específicos para pantallas GRANDES (PC/Tablet) */
+        @media (min-width: 768px) {
             body {
-                padding: 10px;
+                background: #0b0e14;
+                padding: 30px;
             }
-            .contenedor-streaming {
-                padding: 16px 16px 22px 16px;
-                border-radius: 20px;
+            
+            .player-wrapper {
+                max-width: 900px; /* Ancho máximo en PC */
+                border-radius: 24px;
+                overflow: hidden;
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+                border: 1px solid #2d3346;
+            }
+            
+            .brand-mobile {
+                background: #0f1219;
+                padding: 20px;
+                border-bottom: 1px solid #2d3346;
+            }
+            
+            .brand-mobile h1 {
+                font-size: 1.8rem;
+            }
+            
+            .video-container {
+                aspect-ratio: 16 / 9;
+            }
+            
+            .status-bar {
+                padding: 16px 20px;
+            }
+        }
+
+        /* Ajuste para pantallas muy pequeñas (menos de 400px) */
+        @media (max-width: 399px) {
+            .brand-mobile h1 {
+                font-size: 1.2rem;
+            }
+            .status-bar {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
-    <div class="contenedor-streaming">
-        <h1>
-            Inmaculada24 <span>EN VIVO</span>
-        </h1>
-        
-        <!-- Contenedor responsivo del video -->
-        <div class="contenedor-video">
-            <!-- 👇 IFRAME CON LA URL CORRECTA (FUNCIONAL) -->
+    <div class="player-wrapper">
+        <!-- Cabecera -->
+        <div class="brand-mobile">
+            <h1>
+                📺 Inmaculada24 
+                <span class="live-badge">EN VIVO</span>
+            </h1>
+        </div>
+
+        <!-- ===== CONTENEDOR DEL VIDEO (SIN ZOOM) ===== -->
+        <div class="video-container">
             <iframe 
                 src="https://ssh101.com/inmaculada24?adult=yes" 
                 frameborder="0" 
@@ -145,28 +195,23 @@
                 webkitallowfullscreen 
                 mozallowfullscreen>
             </iframe>
-            <!-- 👆 CÓDIGO CORRECTO -->
         </div>
 
-        <!-- Información adicional -->
-        <div class="info-footer">
-            <div>
-                <span class="punto-vivo"></span> Transmisión en directo
+        <!-- Barra de información -->
+        <div class="status-bar">
+            <div class="live-indicator">
+                <span class="dot"></span>
+                <span>Transmisión en directo</span>
             </div>
             <div>
-                📱 Adaptado a tu pantalla
+                📱 Vista optimizada para móvil y PC
             </div>
-            <div>
-                🔄 Actualizado 2026
-            </div>
+        </div>
+        
+        <!-- Nota adicional (opcional) -->
+        <div class="note">
+            ⚡ Si tienes problemas, refresca la página
         </div>
     </div>
-
-    <!-- Mensaje oculto por si alguien inspecciona (opcional) -->
-    <!-- 
-        NOTA: Si ves este mensaje, estás usando la versión responsiva.
-        El iframe utiliza la URL que funciona: https://ssh101.com/inmaculada24?adult=yes
-        NO la URL antigua que mostraba error de Flash.
-    -->
 </body>
 </html>
