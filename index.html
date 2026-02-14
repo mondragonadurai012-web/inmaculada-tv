@@ -3,32 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    
-    <!-- ===== ETIQUETAS OPEN GRAPH (para Facebook, LinkedIn, etc.) ===== -->
-    <!-- Título que aparecerá en la publicación -->
-    <meta property="og:title" content="Inmaculada TV - Transmisión en Vivo" />
-    
-    <!-- Descripción breve (máximo 2-3 líneas) -->
-    <meta property="og:description" content="Disfruta de la transmisión en directo de Inmaculada TV. Música, reflexiones y contenido espiritual las 24 horas." />
-    
-    <!-- ===== CAMBIA ESTA URL POR LA DE TU IMAGEN ===== -->
-    <!-- URL ABSOLUTA de la imagen que quieres como portada -->
-    <meta property="og:image" content="https://tu-usuario.github.io/imagen-portada.jpg" />
-    
-    <!-- URL de tu sitio (la de GitHub Pages) -->
-    <meta property="https://github.com/mondragonadurai012-web/inmaculada-tv/blob/main/foto.jpg" content="https://github.com/mondragonadurai012-web/inmaculada-tv/blob/main/foto.jpg" />
-    
-    <!-- Tipo de contenido (website es el más común) -->
-    <meta property="og:type" content="website" />
-    
-    <!-- Nombre del sitio (opcional pero recomendado) -->
-    <meta property="og:site_name" content="Inmaculada TV" />
-    
-    <!-- Título normal de la pestaña del navegador -->
+    <!-- 1️⃣ CAMBIA ESTE TÍTULO (el que aparece en la pestaña) -->
     <title>Inmaculada TV • Transmisión Directa</title>
-    
     <style>
-        /* Todos tus estilos CSS existentes se quedan IGUAL */
         * {
             margin: 0;
             padding: 0;
@@ -53,6 +30,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
 
+        /* Barra superior minimalista */
         .header {
             background: #11141f;
             padding: 14px 20px;
@@ -87,10 +65,12 @@
             font-size: 0.8rem;
         }
 
+        /* === REPRODUCTOR DE VIDEO NATIVO === */
         .video-wrapper {
             position: relative;
             width: 100%;
             background: #000;
+            /* Proporción 16:9 perfecta */
             aspect-ratio: 16 / 9;
         }
 
@@ -102,6 +82,12 @@
             outline: none;
         }
 
+        /* Controles personalizados sutiles (opcional) */
+        .video-wrapper video::-webkit-media-controls {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Barra de estado inferior */
         .footer {
             background: #11141f;
             padding: 14px 20px;
@@ -144,6 +130,7 @@
             border-top: 1px solid #1f232e;
         }
 
+        /* Ajuste para pantallas grandes (PC) */
         @media (min-width: 1024px) {
             body {
                 background: #0f131c;
@@ -157,6 +144,7 @@
             }
         }
 
+        /* Ajuste para móviles pequeños */
         @media (max-width: 480px) {
             .header {
                 padding: 10px 16px;
@@ -174,8 +162,10 @@
 </head>
 <body>
     <div class="player-container">
+        <!-- Cabecera -->
         <div class="header">
             <div class="title">
+                <!-- 2️⃣ CAMBIA ESTE TEXTO (el que ve el usuario) -->
                 <span>📡 Inmaculada TV</span>
                 <span class="live-badge">EN VIVO</span>
             </div>
@@ -184,13 +174,16 @@
             </div>
         </div>
 
+        <!-- VIDEO PLAYER NATIVO CON HLS -->
         <div class="video-wrapper">
             <video id="videoPlayer" controls playsinline>
+                <!-- ⚠️ NO CAMBIES ESTA URL, es la que hace funcionar el video -->
                 <source src="https://live20.bozztv.com/akamaissh101/ssh101/inmaculada24/playlist.m3u8" type="application/x-mpegURL">
                 Tu navegador no soporta video HTML5.
             </video>
         </div>
 
+        <!-- Pie con información -->
         <div class="footer">
             <div class="status">
                 <span class="pulse"></span>
@@ -206,10 +199,12 @@
         </div>
     </div>
 
+    <!-- Script para compatibilidad HLS -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('videoPlayer');
+            // ⚠️ ESTA ES LA URL DEL VIDEO - NO LA CAMBIES
             const videoSrc = 'https://live20.bozztv.com/akamaissh101/ssh101/inmaculada24/playlist.m3u8';
             
             if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -241,4 +236,3 @@
     </script>
 </body>
 </html>
-
