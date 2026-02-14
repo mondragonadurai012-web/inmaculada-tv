@@ -2,63 +2,171 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Transmisión - Inmaculada24</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Inmaculada24 - Transmisión en Vivo</title>
     <style>
-        body {
+        /* Estilos generales */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1e2b 0%, #2d3349 100%);
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background-color: #1a1a1a;
-            font-family: Arial, sans-serif;
-        }
-        .contenedor {
-            text-align: center;
-            background-color: #000;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
+
+        .contenedor-streaming {
+            width: 100%;
+            max-width: 900px; /* Ancho máximo en PC */
+            background: #0f1119;
+            border-radius: 24px;
+            padding: 24px 24px 30px 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
         h1 {
-            color: #fff;
-            margin-top: 0;
+            color: white;
+            font-size: clamp(1.3rem, 5vw, 1.8rem); /* Tamaño de letra fluido */
             margin-bottom: 20px;
-            font-size: 24px;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        iframe {
-            border: none;
+
+        h1 span {
+            background: #ef4444;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Contenedor del iframe - CLAVE PARA LA RESPONSIVIDAD */
+        .contenedor-video {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Truco para mantener proporción 16:9 (852/480 ≈ 16/9) */
+        .contenedor-video::before {
+            content: "";
             display: block;
-            margin: 0 auto;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio (9/16 = 0.5625) */
         }
-        .nota {
-            color: #888;
-            margin-top: 7px;
-            font-size: 4px;
+
+        /* El iframe se adapta perfectamente */
+        .contenedor-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .info-footer {
+            margin-top: 20px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px 25px;
+        }
+
+        .info-footer div {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .punto-vivo {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: parpadeo 1.5s infinite;
+        }
+
+        @keyframes parpadeo {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* Media query específico para celulares muy pequeños */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .contenedor-streaming {
+                padding: 16px 16px 22px 16px;
+                border-radius: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="contenedor">
-        <h1>📺 Transmisión En Vivo - Inmaculada24</h1>
+    <div class="contenedor-streaming">
+        <h1>
+            Inmaculada24 <span>EN VIVO</span>
+        </h1>
+        
+        <!-- Contenedor responsivo del video -->
+        <div class="contenedor-video">
+            <!-- 👇 IFRAME CON LA URL CORRECTA (FUNCIONAL) -->
+            <iframe 
+                src="https://ssh101.com/inmaculada24?adult=yes" 
+                frameborder="0" 
+                scrolling="no" 
+                allowfullscreen
+                webkitallowfullscreen 
+                mozallowfullscreen>
+            </iframe>
+            <!-- 👆 CÓDIGO CORRECTO -->
+        </div>
 
-        <!-- 👇 ESTE ES EL IFRAME CORRECTO (CON LA URL QUE FUNCIONA) -->
-        <iframe src="https://ssh101.com/inmaculada24?adult=yes"
-                width="1080"
-                height="720"
-                frameborder="0"
-                scrolling="no"
-                allowfullscreen>
-        </iframe>
-        <!-- 👆 CÓDIGO CORRECTO -->
-
-        <p class="nota">Si no ves el video, intenta recargar la página o verifica tu conexión.</p>
+        <!-- Información adicional -->
+        <div class="info-footer">
+            <div>
+                <span class="punto-vivo"></span> Transmisión en directo
+            </div>
+            <div>
+                📱 Adaptado a tu pantalla
+            </div>
+            <div>
+                🔄 Actualizado 2026
+            </div>
+        </div>
     </div>
+
+    <!-- Mensaje oculto por si alguien inspecciona (opcional) -->
+    <!-- 
+        NOTA: Si ves este mensaje, estás usando la versión responsiva.
+        El iframe utiliza la URL que funciona: https://ssh101.com/inmaculada24?adult=yes
+        NO la URL antigua que mostraba error de Flash.
+    -->
 </body>
-
 </html>
-
-
-
