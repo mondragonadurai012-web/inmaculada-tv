@@ -2,11 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- ✅ Meta tag CLAVE para control de zoom en móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Inmaculada24 • En Vivo</title>
+    <title>Inmaculada24 • Transmisión Directa</title>
     <style>
-        /* Reset total */
         * {
             margin: 0;
             padding: 0;
@@ -14,99 +12,101 @@
         }
 
         body {
-            background: #0b0e14;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0a0c12;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0; /* Sin padding lateral para máximo aprovechamiento */
+            padding: 0;
+            margin: 0;
         }
 
-        /* Contenedor principal - ocupa todo el ancho disponible */
-        .player-wrapper {
+        .player-container {
             width: 100%;
             max-width: 100%;
             background: #000;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
 
-        /* Título solo visible en la versión móvil (opcional, lo puedes quitar si prefieres) */
-        .brand-mobile {
-            background: #0f1219;
-            padding: 16px 16px 8px 16px;
-            text-align: center;
-            border-bottom: 1px solid #2a2f3c;
-        }
-
-        .brand-mobile h1 {
-            color: white;
-            font-size: 1.4rem;
-            font-weight: 500;
+        /* Barra superior minimalista */
+        .header {
+            background: #11141f;
+            padding: 14px 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
+            border-bottom: 1px solid #2a2f40;
         }
 
-        .brand-mobile .live-badge {
+        .title {
+            color: white;
+            font-weight: 500;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-badge {
             background: #dc2626;
             color: white;
             font-size: 0.7rem;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 30px;
-            text-transform: uppercase;
             font-weight: 600;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        /* ===== CONTENEDOR DEL VIDEO - SOLUCIÓN ANTI-ZOOM ===== */
-        .video-container {
+        .domain {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        /* === REPRODUCTOR DE VIDEO NATIVO === */
+        .video-wrapper {
             position: relative;
             width: 100%;
             background: #000;
-            /* Proporción exacta 16:9 (altura = ancho * 9/16) */
+            /* Proporción 16:9 perfecta */
             aspect-ratio: 16 / 9;
-            overflow: hidden; /* Evita desbordamientos */
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        /* El iframe - AHORA SIN ZOOM FORZADO */
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        #videoPlayer {
             width: 100%;
             height: 100%;
-            border: 0;
-            object-fit: contain; /* 🔥 CLAVE: "contain" evita que se corte/zoom */
-            background: #000; /* Fondo negro para bordes si hay letterbox */
+            background: #000;
+            display: block;
+            outline: none;
+        }
+
+        /* Controles personalizados sutiles (opcional) */
+        .video-wrapper video::-webkit-media-controls {
+            background: rgba(0, 0, 0, 0.3);
         }
 
         /* Barra de estado inferior */
-        .status-bar {
-            background: #0f1219;
-            padding: 14px 16px;
+        .footer {
+            background: #11141f;
+            padding: 14px 20px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            color: #cbd5e1;
+            color: #9ca3af;
             font-size: 0.85rem;
-            border-top: 1px solid #2a2f3c;
+            border-top: 1px solid #2a2f40;
             gap: 10px;
         }
 
-        .live-indicator {
+        .status {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
-        .dot {
+        .pulse {
             width: 10px;
             height: 10px;
             background: #ef4444;
@@ -120,55 +120,39 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        .note {
-            color: #6b7280;
-            font-size: 0.75rem;
+        .tech-note {
+            color: #4b5563;
+            font-size: 0.7rem;
             text-align: center;
-            background: #0a0c12;
-            padding: 8px;
-            border-top: 1px solid #1e2128;
+            padding: 6px;
+            background: #090b10;
+            border-top: 1px solid #1f232e;
         }
 
-        /* Estilos específicos para pantallas GRANDES (PC/Tablet) */
-        @media (min-width: 768px) {
+        /* Ajuste para pantallas grandes (PC) */
+        @media (min-width: 1024px) {
             body {
-                background: #0b0e14;
+                background: #0f131c;
                 padding: 30px;
             }
-            
-            .player-wrapper {
-                max-width: 900px; /* Ancho máximo en PC */
+            .player-container {
+                max-width: 1000px;
                 border-radius: 24px;
                 overflow: hidden;
-                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-                border: 1px solid #2d3346;
-            }
-            
-            .brand-mobile {
-                background: #0f1219;
-                padding: 20px;
-                border-bottom: 1px solid #2d3346;
-            }
-            
-            .brand-mobile h1 {
-                font-size: 1.8rem;
-            }
-            
-            .video-container {
-                aspect-ratio: 16 / 9;
-            }
-            
-            .status-bar {
-                padding: 16px 20px;
+                border: 1px solid #2f354a;
             }
         }
 
-        /* Ajuste para pantallas muy pequeñas (menos de 400px) */
-        @media (max-width: 399px) {
-            .brand-mobile h1 {
-                font-size: 1.2rem;
+        /* Ajuste para móviles pequeños */
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 16px;
             }
-            .status-bar {
+            .title {
+                font-size: 1rem;
+            }
+            .footer {
+                padding: 12px 16px;
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -176,42 +160,83 @@
     </style>
 </head>
 <body>
-    <div class="player-wrapper">
+    <div class="player-container">
         <!-- Cabecera -->
-        <div class="brand-mobile">
-            <h1>
-                📺 Inmaculada24 
+        <div class="header">
+            <div class="title">
+                <span>📡 Inmaculada24</span>
                 <span class="live-badge">EN VIVO</span>
-            </h1>
+            </div>
+            <div class="domain">
+                transmisión directa
+            </div>
         </div>
 
-        <!-- ===== CONTENEDOR DEL VIDEO (SIN ZOOM) ===== -->
-        <div class="video-container">
-            <iframe 
-                src="https://ssh101.com/inmaculada24?adult=yes" 
-                frameborder="0" 
-                scrolling="no" 
-                allowfullscreen
-                webkitallowfullscreen 
-                mozallowfullscreen>
-            </iframe>
+        <!-- VIDEO PLAYER NATIVO CON HLS -->
+        <div class="video-wrapper">
+            <video id="videoPlayer" controls playsinline>
+                <!-- Fallback si el navegador no soporta HLS nativamente -->
+                <source src="https://live20.bozztv.com/akamaissh101/ssh101/inmaculada24/playlist.m3u8" type="application/x-mpegURL">
+                Tu navegador no soporta video HTML5.
+            </video>
         </div>
 
-        <!-- Barra de información -->
-        <div class="status-bar">
-            <div class="live-indicator">
-                <span class="dot"></span>
+        <!-- Pie con información -->
+        <div class="footer">
+            <div class="status">
+                <span class="pulse"></span>
                 <span>Transmisión en directo</span>
             </div>
             <div>
-                📱 Vista optimizada para móvil y PC
+                <span style="color: #6b7280;">🔄</span> Calidad automática
             </div>
         </div>
         
-        <!-- Nota adicional (opcional) -->
-        <div class="note">
-            ⚡ Si tienes problemas, refresca la página
+        <div class="tech-note">
+            ⚡ Usando reproductor nativo · Sin zoom · Sin publicidad
         </div>
     </div>
+
+    <!-- Script para compatibilidad HLS en navegadores que no lo soportan nativamente (ej: algunos móviles) -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('videoPlayer');
+            const videoSrc = 'https://live20.bozztv.com/akamaissh101/ssh101/inmaculada24/playlist.m3u8';
+            
+            // Comprobar si el navegador soporta HLS nativamente
+            if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari y navegadores iOS - soporte nativo
+                video.src = videoSrc;
+            } 
+            else if (Hls.isSupported()) {
+                // Navegadores que no soportan HLS nativamente (Chrome, Firefox, etc.)
+                const hls = new Hls({
+                    maxLoadingDelay: 4,
+                    minAutoBitrate: 0,
+                    lowLatencyMode: true,
+                });
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                
+                // Opcional: manejo de errores
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        console.error('Error fatal HLS:', data);
+                        // Intentar recuperarse o mostrar mensaje
+                        const statusDiv = document.querySelector('.status');
+                        if (statusDiv) {
+                            statusDiv.innerHTML = '<span style="color:#ef4444;">⚠️ Error en la transmisión</span>';
+                        }
+                    }
+                });
+            } 
+            else {
+                // El navegador no soporta HLS de ninguna forma
+                video.innerHTML = 'Tu navegador no soporta transmisiones HLS. Intenta con Chrome, Safari o Firefox actualizado.';
+                console.warn('HLS no soportado en este navegador');
+            }
+        });
+    </script>
 </body>
 </html>
