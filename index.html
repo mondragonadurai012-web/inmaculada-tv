@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <!-- 1️⃣ CAMBIA ESTE TÍTULO (el que aparece en la pestaña) -->
     <title>Inmaculada TV • Transmisión Directa</title>
     <style>
         * {
@@ -165,7 +164,6 @@
         <!-- Cabecera -->
         <div class="header">
             <div class="title">
-                <!-- 2️⃣ CAMBIA ESTE TEXTO (el que ve el usuario) -->
                 <span>📡 Inmaculada TV</span>
                 <span class="live-badge">EN VIVO</span>
             </div>
@@ -177,7 +175,7 @@
         <!-- VIDEO PLAYER NATIVO CON HLS -->
         <div class="video-wrapper">
             <video id="videoPlayer" controls playsinline>
-                <!-- ⚠️ NO CAMBIES ESTA URL, es la que hace funcionar el video -->
+                <!-- Fallback si el navegador no soporta HLS nativamente -->
                 <source src="https://live20.bozztv.com/akamaissh101/ssh101/inmaculada24/playlist.m3u8" type="application/x-mpegURL">
                 Tu navegador no soporta video HTML5.
             </video>
@@ -199,18 +197,20 @@
         </div>
     </div>
 
-    <!-- Script para compatibilidad HLS -->
+    <!-- Script para compatibilidad HLS en navegadores que no lo soportan nativamente (ej: algunos móviles) -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('videoPlayer');
-            // ⚠️ ESTA ES LA URL DEL VIDEO - NO LA CAMBIES
             const videoSrc = 'https://live20.bozztv.com/akamaissh101/ssh101/inmaculada24/playlist.m3u8';
             
+            // Comprobar si el navegador soporta HLS nativamente
             if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari y navegadores iOS - soporte nativo
                 video.src = videoSrc;
             } 
             else if (Hls.isSupported()) {
+                // Navegadores que no soportan HLS nativamente (Chrome, Firefox, etc.)
                 const hls = new Hls({
                     maxLoadingDelay: 4,
                     minAutoBitrate: 0,
@@ -219,9 +219,11 @@
                 hls.loadSource(videoSrc);
                 hls.attachMedia(video);
                 
+                // Opcional: manejo de errores
                 hls.on(Hls.Events.ERROR, function(event, data) {
                     if (data.fatal) {
                         console.error('Error fatal HLS:', data);
+                        // Intentar recuperarse o mostrar mensaje
                         const statusDiv = document.querySelector('.status');
                         if (statusDiv) {
                             statusDiv.innerHTML = '<span style="color:#ef4444;">⚠️ Error en la transmisión</span>';
@@ -230,7 +232,9 @@
                 });
             } 
             else {
+                // El navegador no soporta HLS de ninguna forma
                 video.innerHTML = 'Tu navegador no soporta transmisiones HLS. Intenta con Chrome, Safari o Firefox actualizado.';
+                console.warn('HLS no soportado en este navegador');
             }
         });
     </script>
